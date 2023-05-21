@@ -43,7 +43,7 @@ Character& Character::operator=(Character&& other) noexcept {
         }
         return *this;
     }
-bool Character :: isAlive()const{
+bool Character :: isAlive(){
     if(this->points > 0){
         return true;
     }
@@ -56,11 +56,9 @@ double Character :: distance(Character* other){
 void Character ::hit(int points){
     if(points < 0)
         throw invalid_argument("negative points");
-    if(this->points < points){
-        this->points = 0;
-    }else{
-        this->points-=points;
-    }
+    
+    this->points-=points;
+    
 }
 string Character ::getName()const{
     return name;

@@ -18,7 +18,7 @@ class Character
         Character& operator=(const Character &other);
         Character& operator=(Character&& other) noexcept;
         virtual ~Character() = default;
-        bool isAlive() const;
+        bool isAlive();
         double distance(Character* other);
         void hit(int points);
         string getName()const;

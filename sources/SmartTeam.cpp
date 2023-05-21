@@ -76,11 +76,12 @@ Character* SmartTeam:: toAttack(Team * enemy){
                 maxCount = countDistance;
                 candidate = character;
             }
-        }else{
+         }//else{
             
-        }
-        return candidate;
+        // }
+        
     }
+    return candidate;
 }
 
 bool SmartTeam:: checkNinja(){

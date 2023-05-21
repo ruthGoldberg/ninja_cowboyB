@@ -23,19 +23,19 @@ double random_float(double min = -100, double max = 100) {
 }
 
 auto create_yninja = [](double x = random_float(), double y = random_float()) {
-    return new YoungNinja{"Bob", Point{x, y}};
+    return new YoungNinja{"young", Point{x, y}};
 };
 
 auto create_tninja = [](double x = random_float(), double y = random_float()) {
-    return new TrainedNinja{"Bob", Point{x, y}};
+    return new TrainedNinja{"trained", Point{x, y}};
 };
 
 auto create_oninja = [](double x = random_float(), double y = random_float()) {
-    return new OldNinja{"Bob", Point{x, y}};
+    return new OldNinja{"old", Point{x, y}};
 };
 
 auto create_cowboy = [](double x = random_float(), double y = random_float()) {
-    return new Cowboy{"Bob", Point{x, y}};
+    return new Cowboy{"cowboy", Point{x, y}};
 };
 
 auto random_char(double x = random_float(), double y = random_float()) -> Character * {
@@ -625,7 +625,7 @@ TEST_SUITE("Battle simulations") {
         CHECK_NOTHROW(simulate_battle(team, team2));
     }
 
-    TEST_CASE("Run full battles using random_char to ensure full functionality") {
+     TEST_CASE("Run full battles using random_char to ensure full functionality") {
         SUBCASE("Team vs Team") {
             Team team{random_char()};
             Team team2{random_char()};
@@ -633,7 +633,7 @@ TEST_SUITE("Battle simulations") {
                 team.add(random_char());
                 team2.add(random_char());
             }
-
+            
             simulate_battle(team, team2);
 
             CHECK(((team.stillAlive() && !team2.stillAlive()) || (!team.stillAlive() && team2.stillAlive())));
@@ -646,23 +646,24 @@ TEST_SUITE("Battle simulations") {
                 team.add(random_char());
                 team2.add(random_char());
             }
-
+            
             simulate_battle(team, team2);
+            
 
             CHECK(((team.stillAlive() && !team2.stillAlive()) || (!team.stillAlive() && team2.stillAlive())));
         }
 
-    //     SUBCASE("Team2 vs Team2") {
-    //         Team2 team{random_char()};
-    //         Team2 team2{random_char()};
-    //         for (int i = 0; i < MAX_TEAM - 1; i++) {
-    //             team.add(random_char());
-    //             team2.add(random_char());
-    //         }
-
-    //         simulate_battle(team, team2);
-
-    //         CHECK(((team.stillAlive() && !team2.stillAlive()) || (!team.stillAlive() && team2.stillAlive())));
-    //     }
+        SUBCASE("Team2 vs Team2") {
+            Team2 team{random_char()};
+            Team2 team2{random_char()};
+            for (int i = 0; i < MAX_TEAM - 1; i++) {
+                team.add(random_char());
+                team2.add(random_char());
+            }
+            
+            simulate_battle(team, team2);
+            
+            CHECK(((team.stillAlive() && !team2.stillAlive()) || (!team.stillAlive() && team2.stillAlive())));
+        }
      }
 }

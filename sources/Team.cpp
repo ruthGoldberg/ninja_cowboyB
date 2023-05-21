@@ -48,11 +48,11 @@ void Team ::attack(Team* against ){
     }
     if(against->stillAlive() == 0)
         throw runtime_error("The team is dead");
-    if(leader == nullptr)
+    if(getLeader() == nullptr)
             throw runtime_error("leader in nullptr");
-    if(!leader->isAlive()){
+    if(!getLeader()->isAlive()){
         replaceLeader();
-        if(leader == nullptr)
+        if(getLeader() == nullptr)
             throw runtime_error("All team members are dead");
     }
     Character* target = toAttack(against);
@@ -62,15 +62,18 @@ void Team ::attack(Team* against ){
         if(!character->isAlive())
             continue;
         if(auto *cowboy = dynamic_cast<Cowboy *>(character)){
-            if(!target->isAlive()){
+            if(!(target->isAlive())){
                 target = toAttack(against);
             }
-            if(target == nullptr)
+            if(target == nullptr){
                 break;
+            }
             cowboyAttack(cowboy , target);
         }
     }
     for( auto character :team){
+        if(target == nullptr)
+            break;
         if(character == nullptr)
             continue;
         if(!character->isAlive())
@@ -132,7 +135,7 @@ Character* Team:: toAttack(Team * enemy){
     Character* target = nullptr;
     for(auto character : enemy->getTeam()){
         if(character == nullptr)
-            continue;
+            continue;  
         if(character->isAlive()){
             double distance = character->distance(leader);
             if( distance < minDistance){
