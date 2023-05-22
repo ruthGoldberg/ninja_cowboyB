@@ -12,6 +12,5 @@ namespace ariel{
         void print() override;
         Character* toAttack(Team * enemy) override;
         bool checkNinja();
-        
     };
 }

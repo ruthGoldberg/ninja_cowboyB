@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 #include "SmartTeam.hpp"
 #include "Team.hpp"
 using namespace ariel;
@@ -21,7 +22,24 @@ void SmartTeam:: attack(Team* against ) {
     Character* target = toAttack(against);
     for(auto character : getTeam()){
         if(character == nullptr)
-            throw runtime_error("character is nullptr");
+            continue;
+        if(!character->isAlive())
+            continue;
+        if(auto *ninja = dynamic_cast<Ninja *>(character)){
+            if(!(target->isAlive())){
+                target = toAttack(against);
+            }
+            if(target == nullptr){
+                break;
+            }
+            ninjaAttack(ninja , target);
+        }
+    }
+    for( auto character :getTeam()){
+        if(target == nullptr)
+            break;
+        if(character == nullptr)
+            continue;
         if(!character->isAlive())
             continue;
         if(auto *cowboy = dynamic_cast<Cowboy *>(character)){
@@ -31,16 +49,6 @@ void SmartTeam:: attack(Team* against ) {
             if(target == nullptr)
                 break;
             cowboyAttack(cowboy , target);
-        }
-        else if(auto *ninja = dynamic_cast<Ninja *>(character)){
-            if(character == nullptr)
-                throw runtime_error("character is nullptr");
-            if(!target->isAlive()){
-                target = toAttack(against);
-            }
-            if(target == nullptr)
-                break;
-            ninjaAttack(ninja , target);
         }
     }
 }
@@ -55,34 +63,6 @@ void SmartTeam:: print(){
     }
 }
 
-Character* SmartTeam:: toAttack(Team * enemy){
-    int maxCount = 0;
-    Character * candidate = nullptr;
-    for(auto character : enemy->getTeam()){
-        if(character == nullptr || !character->isAlive())
-            continue;
-        if(checkNinja()){
-                int countDistance = 0;
-            for(auto teamate : getTeam()){
-                if(teamate == nullptr || !teamate->isAlive())
-                    continue;
-                if(auto *ninja = dynamic_cast<Ninja*>(teamate)){
-                    if(teamate->distance(character) < 1){
-                        countDistance++;
-                    }
-                }
-            }
-            if(countDistance > maxCount){
-                maxCount = countDistance;
-                candidate = character;
-            }
-         }//else{
-            
-        // }
-        
-    }
-    return candidate;
-}
 
 bool SmartTeam:: checkNinja(){
     for(auto character : getTeam()){
@@ -90,4 +70,38 @@ bool SmartTeam:: checkNinja(){
             return true;
     }
     return false;
+}
+
+Character* SmartTeam::toAttack(Team* enemy){
+    Character* target = nullptr;
+    if(checkNinja()){
+        int maxCount = 0, countDistance = 0;
+        for(auto candidate : enemy->getTeam()){
+            for(auto character : getTeam()){
+                if(character == nullptr || !character->isAlive() || !candidate->isAlive())
+                    continue;
+                if(auto *ninja = dynamic_cast<Ninja*>(character)){
+                    if(ninja->distance(candidate) < 1){
+                        countDistance++;
+                    }
+                }
+            }
+            if(countDistance > maxCount){
+                maxCount = countDistance;
+                target = candidate;
+            }
+        }
+        if(maxCount)
+            return target;
+    }
+    int minPoints = numeric_limits<int>::max();
+    for(auto candidate : enemy->getTeam()){
+        if(!candidate->isAlive())
+            continue;
+        if(candidate->getPoints() < minPoints){
+            minPoints = candidate->getPoints();
+            target = candidate;
+        }
+    }
+    return target;
 }

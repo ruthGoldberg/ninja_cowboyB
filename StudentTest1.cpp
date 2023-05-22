@@ -6,6 +6,7 @@
 #include "sources/TrainedNinja.hpp"
 #include "sources/Cowboy.hpp"
 #include "sources/Team.hpp"
+#include "sources/SmartTeam.hpp"
 #include "sources/Team2.hpp"
 #include <random>
 #include <chrono>
@@ -665,5 +666,19 @@ TEST_SUITE("Battle simulations") {
             
             CHECK(((team.stillAlive() && !team2.stillAlive()) || (!team.stillAlive() && team2.stillAlive())));
         }
+        
+        SUBCASE("SmartTeam vs Team2") {
+            SmartTeam team{random_char()};
+            Team2 team2{random_char()};
+            for (int i = 0; i < MAX_TEAM - 1; i++) {
+                team.add(random_char());
+                team2.add(random_char());
+            }
+            
+            simulate_battle(team, team2);
+            cout<<"smart team : "<<team.stillAlive()<<" team2: "<<team2.stillAlive()<<endl;
+            CHECK(((team.stillAlive() && !team2.stillAlive()) || (!team.stillAlive() && team2.stillAlive())));
+        }
+    
      }
 }
